@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . /app
 RUN mv supervisord.conf /etc/supervisord.conf
 
-RUN uv sync --no-cache && \
+RUN uv sync --no-group dev --no-cache && \
     pip cache purge && \
     uv cache clean
 

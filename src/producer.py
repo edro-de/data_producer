@@ -39,6 +39,7 @@ while True:
     transaction = generate_data()
     producer.produce(
         topic="transactions",
+        key=os.getenv("PROD_KEY", f"producer_{int(time.time())}"),
         value=json.dumps(transaction),
         callback=delivery_report,
     )

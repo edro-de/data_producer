@@ -50,13 +50,23 @@ services:
     volumes:
       - kafka2-data:/var/lib/kafka
 
-  producer:
+  producer1:
     build: .
-    container_name: data-producer
+    container_name: producer1
     depends_on:
       - kafka1
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka1:9092
+      PROD_KEY: prod1
+
+  producer2:
+    build: .
+    container_name: producer2
+    depends_on:
+      - kafka1
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka1:9092
+      PROD_KEY: prod2
 
 volumes:
   zookeeper-data:
