@@ -8,13 +8,8 @@ from faker import Faker
 from loguru import logger
 
 # giving some time to kafka
-logger.info("Producer Starting")
 time.sleep(30)
-
 fake = Faker()
-
-conf = {"bootstrap.servers": os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka1:9092")}
-producer = Producer(conf)
 
 
 def generate_data() -> dict:
@@ -35,13 +30,17 @@ def delivery_report(err: Optional[Exception], msg: Message) -> None:
         logger.info(f"Delivered to {msg.topic()} [{msg.partition()}]")
 
 
-while True:
-    transaction = generate_data()
-    producer.produce(
-        topic="transactions",
-        key=os.getenv("PROD_KEY", f"producer_{int(time.time())}"),
-        value=json.dumps(transaction),
-        callback=delivery_report,
-    )
-    producer.poll(0)
-    time.sleep(2)
+if __name__ == "__main__":
+    conf = {"bootstrap.servers": os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka1:9092")}
+    producer = Producer(conf)
+
+    while True:
+        transaction = generate_data()
+        producer.produce(
+            topic="transactions",
+            key=os.getenv("PROD_KEY", f"producer_{int(time.time())}"),
+            value=json.dumps(transaction),
+            callback=delivery_report,
+        )
+        producer.poll(0)
+        time.sleep(2)
