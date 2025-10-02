@@ -7,7 +7,7 @@ sleep 20
 kafka-topics --bootstrap-server localhost:9092 \
     --create \
     --topic transactions \
-    --partitions 3 \
+    --partitions 2 \
     --replication-factor 2 \
     --if-not-exists
 

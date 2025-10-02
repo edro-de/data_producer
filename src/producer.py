@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import time
 from typing import Optional
 
@@ -10,6 +11,9 @@ from loguru import logger
 # giving some time to kafka
 time.sleep(30)
 fake = Faker()
+interval = 0.1
+
+logger.configure(handlers=[{"sink": sys.stdout, "level": os.getenv("LOG_LEVEL", "INFO")}])
 
 
 def generate_data() -> dict:
@@ -27,7 +31,7 @@ def delivery_report(err: Optional[Exception], msg: Message) -> None:
     if err is not None:
         logger.warning(f"Delivery failed! {err}")
     else:
-        logger.info(f"Delivered to {msg.topic()} [{msg.partition()}]")
+        logger.debug(f"Delivered to {msg.topic()} [{msg.partition()}]")
 
 
 if __name__ == "__main__":
@@ -43,4 +47,4 @@ if __name__ == "__main__":
             callback=delivery_report,
         )
         producer.poll(0)
-        time.sleep(2)
+        time.sleep(interval)
