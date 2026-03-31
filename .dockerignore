@@ -1,0 +1,6 @@
+*ipynb
+*mypy*
+*.venv
+test/
+docker-compose.yml
+.yamllint.yml
